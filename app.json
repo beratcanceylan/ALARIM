@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "Alarim",
+    "slug": "alarim",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "scheme": "alarim",
+    "experiments": {
+      "typedRoutes": true
+    },
+    "android": {
+      "package": "com.beratcanceylan.alarim",
+      "permissions": [
+        "POST_NOTIFICATIONS",
+        "RECEIVE_BOOT_COMPLETED",
+        "SCHEDULE_EXACT_ALARM",
+        "USE_EXACT_ALARM"
+      ]
+    },
+    "ios": {
+      "bundleIdentifier": "com.beratcanceylan.alarim"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-notifications",
+        {
+          "defaultChannel": "alarms"
+        }
+      ],
+      "expo-image-picker",
+      "expo-document-picker",
+      "expo-audio",
+      "expo-sqlite",
+      "expo-asset",
+      "expo-image"
+    ]
+  }
+}

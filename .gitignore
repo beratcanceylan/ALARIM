@@ -1,0 +1,11 @@
+.gradle/
+build/
+.idea/
+local.properties
+*.iml
+.kotlin/
+node_modules/
+.expo/
+dist/
+web-build/
+*.log
