@@ -1,9 +1,13 @@
 {
   "expo": {
-    "name": "Alarim",
+    "name": "ALARIM",
     "slug": "alarim",
     "version": "1.0.0",
     "orientation": "portrait",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "userInterfaceStyle": "automatic",
     "scheme": "alarim",
     "experiments": {
@@ -14,8 +18,10 @@
       "permissions": [
         "POST_NOTIFICATIONS",
         "RECEIVE_BOOT_COMPLETED",
-        "SCHEDULE_EXACT_ALARM",
-        "USE_EXACT_ALARM"
+        "SCHEDULE_EXACT_ALARM"
+      ],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "ios": {
@@ -23,18 +29,34 @@
     },
     "plugins": [
       "expo-router",
+      "expo-dev-client",
       [
         "expo-notifications",
         {
           "defaultChannel": "alarms"
         }
       ],
-      "expo-image-picker",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "ALARIM alarm görsellerini seçebilmek için fotoğraflarına erişmek istiyor.",
+          "cameraPermission": "ALARIM alarm görseli çekebilmek için kameranı kullanmak istiyor."
+        }
+      ],
       "expo-document-picker",
-      "expo-audio",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "enableBackgroundPlayback": true,
+          "enableBackgroundRecording": false
+        }
+      ],
       "expo-sqlite",
       "expo-asset",
-      "expo-image"
+      "expo-image",
+      "expo-font"
     ]
   }
 }

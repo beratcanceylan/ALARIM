@@ -1,17 +1,21 @@
 import type { AlarmCard } from "@/types/alarm";
-
-const STORAGE_KEY = "alarim.cards.v1";
+import {
+  LEGACY_STORAGE_KEY,
+  parseStoredCards,
+  STORAGE_KEY,
+} from "@/lib/storage-core";
 
 export async function readCards(): Promise<AlarmCard[]> {
   if (typeof globalThis.localStorage === "undefined") return [];
   const raw = globalThis.localStorage.getItem(STORAGE_KEY);
-  if (!raw) return [];
-  try {
-    const parsed: unknown = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as AlarmCard[]) : [];
-  } catch {
-    return [];
-  }
+  if (raw) return parseStoredCards(raw, "modern");
+
+  const legacyRaw = globalThis.localStorage.getItem(LEGACY_STORAGE_KEY);
+  if (!legacyRaw) return [];
+
+  const migratedCards = parseStoredCards(legacyRaw, "legacy");
+  globalThis.localStorage.setItem(STORAGE_KEY, JSON.stringify(migratedCards));
+  return migratedCards;
 }
 
 export async function writeCards(cards: AlarmCard[]): Promise<void> {

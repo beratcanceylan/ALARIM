@@ -1,12 +1,25 @@
 export type IsoWeekday = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
+export type AlarmSchedule =
+  | {
+      type: "weekly";
+      repeatDays: IsoWeekday[];
+    }
+  | {
+      type: "once";
+      /** A local calendar date in YYYY-MM-DD format. */
+      date: string;
+    };
+
 export type AlarmTime = {
   id: number;
   cardId: number;
+  title: string;
+  note: string;
+  imageUri: string | null;
   hour: number;
   minute: number;
-  /** ISO-8601 values: Monday = 1 ... Sunday = 7. Empty means one-time. */
-  repeatDays: IsoWeekday[];
+  schedule: AlarmSchedule;
   soundUri: string | null;
   soundName: string | null;
   snoozeMinutes: number;
@@ -15,9 +28,8 @@ export type AlarmTime = {
 
 export type AlarmCard = {
   id: number;
+  /** Required group name shown on the home screen. */
   title: string;
-  imageUri: string | null;
-  note: string;
   times: AlarmTime[];
 };
 
@@ -39,13 +51,32 @@ export const WEEKDAYS: readonly { value: IsoWeekday; label: string }[] = [
   { value: 7, label: "Paz" },
 ];
 
-export function createEmptyTime(cardId = 0): AlarmTime {
+export function formatLocalDateKey(date: Date): string {
+  return [date.getFullYear(), date.getMonth() + 1, date.getDate()]
+    .map((value, index) => (index === 0 ? String(value) : String(value).padStart(2, "0")))
+    .join("-");
+}
+
+export function getDefaultOnceDate(hour: number, minute: number, now: Date): string {
+  const date = new Date(now);
+  date.setHours(hour, minute, 0, 0);
+  if (date.getTime() <= now.getTime()) date.setDate(date.getDate() + 1);
+  return formatLocalDateKey(date);
+}
+
+export function createEmptyTime(cardId = 0, now = new Date()): AlarmTime {
+  const hour = 8;
+  const minute = 0;
+
   return {
     id: nextDraftTimeId--,
     cardId,
-    hour: 8,
-    minute: 0,
-    repeatDays: [],
+    title: "",
+    note: "",
+    imageUri: null,
+    hour,
+    minute,
+    schedule: { type: "once", date: getDefaultOnceDate(hour, minute, now) },
     soundUri: null,
     soundName: null,
     snoozeMinutes: 10,
